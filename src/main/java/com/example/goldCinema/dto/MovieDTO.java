@@ -7,8 +7,9 @@ public class MovieDTO {
     private String imagen;
     private String genero;
     private double valoracion;
+    private String actores;
+    private String anio;
 
-    // Getters y Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -26,5 +27,10 @@ public class MovieDTO {
 
     public double getValoracion() { return valoracion; }
     public void setValoracion(double valoracion) { this.valoracion = valoracion; }
-    private String actores;
+
+    public String getActores() { return actores; }
+    public void setActores(String actores) { this.actores = actores; }
+
+    public String getAnio() { return anio; }
+    public void setAnio(String anio) { this.anio = anio; }
 }

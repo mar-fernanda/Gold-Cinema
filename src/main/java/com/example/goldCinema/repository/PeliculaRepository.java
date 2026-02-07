@@ -17,7 +17,14 @@ public interface PeliculaRepository extends JpaRepository<Pelicula, Long> {
     @Query("SELECT f.pelicula FROM Favorito f WHERE f.usuario.username = :username")
     List<Pelicula> findFavoritasDeUsuario(String username);
 
-    @Query("SELECT p FROM Pelicula p WHERE p.id NOT IN " +
-           "(SELECT f.pelicula.id FROM Favorito f WHERE f.usuario.username = :username)")
-    List<Pelicula> findPorVerDeUsuario(String username);
+@Query("""
+    SELECT p FROM Pelicula p
+    WHERE p.genero IN :generos
+    AND p NOT IN (SELECT f FROM Usuario u JOIN u.favoritos f WHERE u.username = :username)
+    AND p NOT IN (SELECT v FROM Usuario u JOIN u.vistos v WHERE u.username = :username)
+    ORDER BY p.valoracion DESC
+""")
+List<Pelicula> recomendarPorGeneros(List<String> generos, String username);
+List<Pelicula> findTop10ByOrderByValoracionDesc();
+List<Pelicula> findTop20ByOrderByValoracionDesc();
 }

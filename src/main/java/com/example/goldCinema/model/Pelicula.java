@@ -15,13 +15,13 @@ public class Pelicula {
 public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Pelicula)) return false;
-    Pelicula pelicula = (Pelicula) o;
-    return imdbId != null && imdbId.equals(pelicula.imdbId);
+    Pelicula p = (Pelicula) o;
+    return id != null && id.equals(p.id);
 }
 
 @Override
 public int hashCode() {
-    return imdbId != null ? imdbId.hashCode() : 0;
+    return id != null ? id.hashCode() : 0;
 }
 
     @Id
@@ -35,10 +35,11 @@ public int hashCode() {
     private String descripcion;
     private String imagen;
     private double valoracion;
+        private String actores;
+        private String anio;
 
 @OneToMany(mappedBy = "pelicula")
 private List<Comentario> comentarios = new ArrayList<>();
-
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -66,4 +67,10 @@ private List<Comentario> comentarios = new ArrayList<>();
 
     public List<Comentario> getComentarios() { return comentarios; }
     public void setComentarios(List<Comentario> comentarios) { this.comentarios = comentarios; }
+
+    public String getActores() { return actores; }
+    public void setActores(String actores) { this.actores = actores; }
+
+    public String getAnio() { return anio; }
+    public void setAnio(String anio) { this.anio = anio; }
 }

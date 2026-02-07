@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let peliculaActual = null;
     let estadoPel = { favorito: false, porVer: false, visto: false };
 
-    // ----------------- NOTIFICACIONES -----------------
     function mostrarNotificacion(mensaje, tipo = "success") {
         const container = document.getElementById("notification-container") || crearContenedorNotificaciones();
         const notification = document.createElement("div");
@@ -38,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return container;
     }
 
-    // ----------------- MODAL -----------------
+    // modal
     window.abrirModal = async function (id) {
         peliculaActual = id;
         try {
@@ -48,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             document.getElementById("modalTitulo").innerText = p.titulo || "";
             document.getElementById("modalImg").src = p.imagen || "";
+            document.getElementById("modalAnio").innerText = p.anio || "";
+            document.getElementById("modalActores").innerText = p.actores || "";
             document.getElementById("modalGenero").innerText = p.genero || "";
             document.getElementById("modalDescripcion").innerText = p.descripcion || "";
             document.getElementById("modalValoracion").innerText = p.valoracion || 0;
@@ -76,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === modal) cerrarModal();
     });
 
-    // ----------------- POST GENERAL -----------------
+    // post
     async function postAccion(url, mensaje, reload = false, paramsObj = {}) {
         try {
             const formData = new URLSearchParams();
@@ -112,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ----------------- ESTADO INICIAL -----------------
+    //estado
     async function cargarEstado() {
         try {
             const res = await fetch(`${contextPath}/usuario/estado?movieId=${peliculaActual}`, {
@@ -135,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnVistos) btnVistos.innerText = estadoPel.visto ? "🎬 Vista" : "🎬 Marcar como vista";
     }
 
-    // ----------------- BOTONES -----------------
+    // botones
     document.getElementById("btnFavorito")?.addEventListener("click", async () => {
         const accion = estadoPel.favorito ? "eliminar" : "agregar";
         const res = await postAccion(`${contextPath}/usuario/favorito/toggle/${peliculaActual}?accion=${accion}`);
@@ -158,12 +159,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await postAccion(`${contextPath}/usuario/vistos/toggle?movieId=${peliculaActual}`);
         if (res) {
             estadoPel.visto = true;
-            estadoPel.porVer = false; // Se elimina de Por Ver
+            estadoPel.porVer = false;
             actualizarBotones();
         }
     });
 
-    // ----------------- COMENTARIOS -----------------
+    // Comentarios
     function cargarComentarios() {
         if (!peliculaActual) return;
 
@@ -204,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ----------------- VOTOS -----------------
+    // me gusta
     function cargarVotos() {
         if (!peliculaActual) return;
         fetch(`${contextPath}/usuario/votos?movieId=${peliculaActual}`)
@@ -222,6 +223,51 @@ document.addEventListener("DOMContentLoaded", () => {
             like: meGusta
         }).then(() => cargarVotos());
 
+/* recomendaciones */
+const section = document.getElementById("recomendaciones");
+const grid = document.getElementById("recomendacionesGrid");
+
+async function cargarRecomendaciones() {
+    if (!section || !grid) return;
+
+    try {
+        grid.innerHTML = "<p>Cargando recomendaciones...</p>";
+
+        const res = await fetch(
+            `${contextPath}/api/recomendaciones?ts=${Date.now()}`,
+            { credentials: "same-origin", cache: "no-store" }
+        );
+
+        const data = res.ok ? await res.json() : [];
+
+        if (!Array.isArray(data) || data.length === 0) {
+            section.classList.add("hidden");
+            grid.innerHTML = "<p>No hay recomendaciones por el momento</p>";
+            return;
+        }
+        grid.innerHTML = data.map(p => `
+            <div class="card" onclick="abrirModal('${p.id}')">
+                <img
+                    src="${p.imagen || 'https://via.placeholder.com/150'}" 
+                    alt="${p.titulo || 'Película'}"
+                >
+                <h3>${p.titulo || ''}</h3>
+                <p>${p.genero || ''}</p>
+            </div>
+        `).join("");
+
+        section.classList.remove("hidden");
+
+    } catch (err) {
+        console.error("Error cargando recomendaciones:", err);
+        section.classList.add("hidden");
+        grid.innerHTML = "<p>Error al cargar recomendaciones</p>";
+    }
+}
+
+cargarRecomendaciones();
+
     document.getElementById("btnLike")?.addEventListener("click", () => votar(true));
     document.getElementById("btnDislike")?.addEventListener("click", () => votar(false));
 });
+

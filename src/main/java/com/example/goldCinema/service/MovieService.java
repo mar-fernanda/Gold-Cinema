@@ -22,6 +22,8 @@ import com.example.goldCinema.repository.UsuarioRepository;
 import com.example.goldCinema.repository.VotoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class MovieService {
 
@@ -48,6 +50,10 @@ public class MovieService {
     @Value("${omdb.api.key}")
     private String apiKey;
 
+    @PostConstruct
+public void init() {
+    completarPeliculasExistentes();
+}
 
     private Pelicula obtenerOcrearPelicula(String imdbId) {
         return peliculaRepository.findByImdbId(imdbId)
@@ -102,6 +108,36 @@ public class MovieService {
             usuarioRepository.save(usuario);
         }
     }
+
+    public void completarPeliculasExistentes() {
+
+    List<Pelicula> peliculas = peliculaRepository.findAll();
+    System.out.println("Películas encontradas: " + peliculas.size());
+
+    for (Pelicula p : peliculas) {
+
+        if (p.getGenero() == null || p.getGenero().isBlank()) {
+
+            System.out.println("Completando: " + p.getImdbId());
+
+            MovieDTO dto = buscarOMDbPorId(p.getImdbId());
+            if (dto == null) {
+                System.out.println("❌ No se pudo obtener OMDb para " + p.getImdbId());
+                continue;
+            }
+
+            p.setTitulo(dto.getTitulo());
+            p.setGenero(dto.getGenero());
+            p.setDescripcion(dto.getDescripcion());
+            p.setImagen(dto.getImagen());
+            p.setValoracion(dto.getValoracion());
+
+            peliculaRepository.save(p);
+
+            System.out.println("✅ Completada: " + dto.getTitulo());
+        }
+    }
+}
 
     public List<Pelicula> peliculasVistas(Usuario usuario) {
         return usuario.getVistos() != null

@@ -4,6 +4,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${titulo}</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
@@ -117,13 +118,15 @@
 
 <div id="movieModal" class="modal hidden">
     <div class="modal-content">
-        <span class="close" onclick="cerrarModal()">&times;</span>
+                <span class="close">&times;</span>
         <h2 id="modalTitulo"></h2>
         <img id="modalImg" src="" alt="" style="max-width:200px;">
+        <p><strong>Año:</strong> <span id="modalAnio"></span></p>
+        <p><strong>Actores:</strong> <span id="modalActores"></span></p>
         <p><b>Género:</b> <span id="modalGenero"></span></p>
         <p><b>Descripción:</b> <span id="modalDescripcion"></span></p>
         <p><b>Valoración IMDb:</b> <span id="modalValoracion"></span></p>
-
+        
         <div class="votacion">
             <button id="btnLike">👍 Me gusta</button>
             <button id="btnDislike">👎 No me gusta</button>

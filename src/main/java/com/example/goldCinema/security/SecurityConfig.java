@@ -47,7 +47,6 @@ public class SecurityConfig {
         "/css/**",
         "/images/**",
         "/js/**",
-        "/api/**",
         "/webjars/**",
         "/"
     ).permitAll()
@@ -55,6 +54,7 @@ public class SecurityConfig {
     .requestMatchers("/usuario/**").authenticated()
     .requestMatchers("/favoritos/**").authenticated()
     .requestMatchers("/perfil/**").authenticated()
+    .requestMatchers("/api/**").permitAll()
     .anyRequest().authenticated()
 )
 

@@ -3,7 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>${titulo}</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
@@ -58,10 +58,11 @@
 </section>
 
 <div id="movieModal" class="modal hidden">
-    <div class="modal-content">
         <span class="close">&times;</span>
         <h2 id="modalTitulo"></h2>
         <img id="modalImg" src="" alt="" style="max-width:200px;">
+        <p><strong>Año:</strong> <span id="modalAnio"></span></p>
+        <p><strong>Actores:</strong> <span id="modalActores"></span></p>
         <p><b>Género:</b> <span id="modalGenero"></span></p>
         <p><b>Descripción:</b> <span id="modalDescripcion"></span></p>
         <p><b>Valoración IMDb:</b> <span id="modalValoracion"></span></p>
