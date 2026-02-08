@@ -35,8 +35,8 @@ public int hashCode() {
     private String descripcion;
     private String imagen;
     private double valoracion;
-        private String actores;
-        private String anio;
+    private String actores;
+    private String anio;
 
 @OneToMany(mappedBy = "pelicula")
 private List<Comentario> comentarios = new ArrayList<>();

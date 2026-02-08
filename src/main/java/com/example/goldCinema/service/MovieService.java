@@ -131,6 +131,8 @@ public void init() {
             p.setDescripcion(dto.getDescripcion());
             p.setImagen(dto.getImagen());
             p.setValoracion(dto.getValoracion());
+            p.setActores(dto.getActores());
+            p.setAnio(dto.getAnio());
 
             peliculaRepository.save(p);
 
@@ -190,6 +192,8 @@ public Map<String, Long> obtenerGenerosFavoritos(Usuario usuario) {
                 MovieDTO dto = new MovieDTO();
                 dto.setId(m.get("imdbID"));
                 dto.setTitulo(m.get("Title"));
+                dto.setActores((String) map.get("Actors"));
+                dto.setAnio((String) map.get("Year"));
                 dto.setImagen(m.get("Poster"));
                 dto.setDescripcion("");
                 dto.setGenero("");
@@ -219,6 +223,8 @@ public Map<String, Long> obtenerGenerosFavoritos(Usuario usuario) {
             dto.setDescripcion((String) map.get("Plot"));
             dto.setImagen((String) map.get("Poster"));
             dto.setGenero((String) map.get("Genre"));
+            dto.setActores((String) map.get("Actors"));
+            dto.setAnio((String) map.get("Year"));
 
             try {
                 dto.setValoracion(Double.parseDouble((String) map.get("imdbRating")));
